@@ -1,0 +1,33 @@
+pipeline {
+    agent any 
+    
+    stages{
+        stage("Checkout code"){
+            steps {
+                git branch: 'master',
+                    url: 'https://github.com/Chirag711/python-jenkins-docker.git'
+            }
+        }
+        stage('Debug') {
+            steps {
+                sh '''
+                whoami
+                uname -a
+                which docker || echo "docker not found"
+                '''
+            }
+        }
+        
+        stage("Build docker image"){
+            steps{
+                sh 'docker build -t python-jenkins-demo .'
+            }
+        }
+        
+        stage("Run docker container"){
+            steps{
+                sh "docker run --rm python-jenkins-demo"
+            }
+        }
+    }
+}
